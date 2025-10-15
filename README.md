@@ -17,7 +17,15 @@ Initially written November 2024
 
 4. Once the spacing looks good, and you would like to change the font itself, click **Apply**. 
 
-### Notes:
+### Tips: 
+
+- Tracker works with font units. Typesetting apps don’t always use that measurement. Let’s say you have your font test-installed and working in Figma. You like how 3% tracking looks in Figma, and you want that to be your font’s default spacing. The percentage is of your font’s “em.” Most fonts have 1000 units per em; let’s say yours does too. 
+
+	> 3% = `0.03 * 1000upm` = **30**
+	
+	So now you know to apply 30 units of tracking to your font using Tracker.
+
+### Behind-the-scenes:
 
 - Tracker will force you to track with an even number. This is because it encourages you to add an equal amount of space to each sidebearing of each glyph. Let’s say you would like to add 1 unit of tracking. Which sidebearing will you add the unit to? Now you see the problem.
 - Components are tricky because they’re just references to glyphs inside other glyphs and each glyph has their own spacing situation... Well, Tracker has some *state-of-the-art* math inside that preserves your relative component positioning as best as possible, regardless of whether components are stretch, squished, rotated, flipped, etc.
