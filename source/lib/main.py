@@ -66,6 +66,10 @@ class Tracker(Subscriber, ezui.WindowController):
     def started(self):
         self.w.open()
         
+    def destroy(self):
+        self.csc.setTracking(0)
+        self.w.close()
+        
     def track_glyph_sides(self, g, side_value):
         # Move contours, anchors, guidelines, image
         stuff_to_move = list(g.contours) + list(g.anchors) + list(g.guidelines) + ([g.image] if g.image else [])
@@ -126,11 +130,11 @@ class Tracker(Subscriber, ezui.WindowController):
         self.tracking = self.w.getItem("trackingSlider").get()
         tracking_value = int(self.tracking) 
         self.apply_tracking(tracking_value)
-        # self.csc.refreshGlyphLineView()
         self.csc.setTracking(0)
-        self.csc.refreshGlyphLineView()
-        self.csc.updateGlyphLineView()
-        print(f"Implemented tracking of {tracking_value}")
+        # self.csc.refreshGlyphLineView()
+        # self.csc.updateGlyphLineView()
+        self.csc.glyphLineView.refresh()
+        print(f"Applied tracking of {tracking_value}.")
 
 
 if CurrentFont():
