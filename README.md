@@ -75,30 +75,54 @@ BaseFont.track(
 ```
 Apply sidebearing-preserving tracking to all or a subset of glyphs in a font.
 
+### Example Scripts
+
+```python
+f = CurrentFont()
+f.track(122)
+```
+
+```python
+f = CurrentFont()
+
+f.track(
+    -100, 
+    glyph_set=["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"],
+	all_layers=False,
+	future_negative_width="limit to zero",
+)
+```
+
 ### Arguments
 
 `tracking_value`
+
 Tracking in font units. Provide as an even integer. Each glyph gets + half on RSB and + half on LSB.
 
 `glyph_set`
+
 Names of glyphs to track. Provide as list/set of glyph names or `None`. `None` uses all glyphs in each processed layer.
 
 `all_layers`
+
 Boolean. `True` processes every layer in the font. `False` processes only the default layer.
 
 `ignore_zero_width`
+
 Boolean. Skip glyphs with width 0 (e.g. combining accents) when `True`.
 
 `future_negative_width`
+
 Behavior if the requested tracking would push a glyph’s width below zero. Provide as one of the following strings:
 
-`"allow negatives"` (default) Proceed even if width becomes negative.
+- `"allow negatives"` (default) Proceed even if width becomes negative.
 
-`"limit to zero"` Clamp current glyph’s subtracted tracking to the largest change that keeps width at 0.
+- `"limit to zero"` Clamp current glyph’s subtracted tracking to the largest change that keeps width at 0.
 
-`"don’t change"` Skip that glyph.
+- `"don’t change"` Skip that glyph.
 
 `report`
+
 Boolean. Print a short report of changes after completion.
 
 
