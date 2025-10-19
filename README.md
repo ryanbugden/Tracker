@@ -86,7 +86,7 @@ BaseFont.track(
 	report=False
 )
 ```
-Apply sidebearing-preserving tracking to all or a subset of glyphs in a font.
+Apply tracking to all or a subset of glyphs in a font.
 
 ### Arguments
 
@@ -104,7 +104,7 @@ Boolean. `True` processes every layer in the font. `False` processes only the de
 
 `ignore_zero_width`
 
-Boolean. Skip glyphs with width 0 (e.g. combining accents) when `True`.
+Boolean. Skips glyphs with width 0 (e.g. combining accents) when `True`.
 
 `future_negative_width`
 
