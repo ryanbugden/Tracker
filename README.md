@@ -65,7 +65,7 @@ If you have Tracker installed, a generalized `track()` method is added to `RFont
 
 ```python
 BaseFont.track(
-	tracking_value,
+	value,
 	glyph_set=None,
 	all_layers=True,
 	ignore_zero_width=True,
@@ -95,7 +95,7 @@ f.track(
 
 ### Arguments
 
-`tracking_value`
+`value`
 
 Tracking in font units. Provide as an even integer. Each glyph gets + half on RSB and + half on LSB.
 

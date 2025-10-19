@@ -32,8 +32,8 @@ def track_glyph(glyph, side_value, glyph_set=None):
             comp.moveBy((horz_adjust, vert_adjust))
         glyph.width += side_value * 2
         
-def track_font(font, tracking_value, glyph_set=None, all_layers=True, ignore_zero_width=True, future_negative_width="allow negatives", report=False):
-    half = otRound(tracking_value/2)
+def track_font(font, value, glyph_set=None, all_layers=True, ignore_zero_width=True, future_negative_width="allow negatives", report=False):
+    half = otRound(value/2)
     layers = font.layers if all_layers else [font.defaultLayer]
     ignored_glyphs = {}
     clamped_glyphs = {}
@@ -82,8 +82,8 @@ def track_font(font, tracking_value, glyph_set=None, all_layers=True, ignore_zer
 
 
 
-def track(self, tracking_value, glyph_set=None, all_layers=True, ignore_zero_width=True, future_negative_width="allow negatives", report=False):
-    track_font(self, tracking_value, glyph_set, all_layers, ignore_zero_width, future_negative_width, report)
+def track(self, value, glyph_set=None, all_layers=True, ignore_zero_width=True, future_negative_width="allow negatives", report=False):
+    track_font(self, value, glyph_set, all_layers, ignore_zero_width, future_negative_width, report)
 
 # Add to RFont API
 RFont.track = track
