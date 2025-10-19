@@ -51,10 +51,10 @@ Choose whether you would like to output a report of what changes Tracker made to
 
 ## A couple of use-cases
 
-### Changing the overall spacing of your font
+**Changing the overall spacing of your font**
 ![](source/resources/use_case-overall.gif)
 
-### Changing the spacing of your caps
+**Changing the spacing of your caps**
 ![](source/resources/use_case-caps.gif)
 
 
