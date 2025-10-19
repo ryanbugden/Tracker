@@ -1,14 +1,14 @@
 name: Tracker
 developer: Ryan Bugden
 developerURL: http://ryanbugden.com
-launchAtStartUp: false
-mainScript: main.py
-version: 0.1
+launchAtStartUp: true
+mainScript: tools.py
+version: 0.2
 addToMenu:
 - path: main.py
   preferredName: Tracker
   shortKey: ""
 html: true
-timeStamp: 1760547107
+timeStamp: 1760899069
 requiresVersionMajor: '4'
 requiresVersionMinor: '4'
