@@ -88,24 +88,6 @@ BaseFont.track(
 ```
 Apply sidebearing-preserving tracking to all or a subset of glyphs in a font.
 
-### Example Scripts
-
-```python
-f = CurrentFont()
-f.track(122)
-```
-
-```python
-f = CurrentFont()
-# Subtract 100 units from basic caps, in default layer only. No negative widths.
-f.track(
-    -100, 
-    glyph_set=["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"],
-	all_layers=False,
-	future_negative_width="limit to zero",
-)
-```
-
 ### Arguments
 
 `value`
@@ -137,6 +119,24 @@ Behavior if the requested tracking would push a glyph’s width below zero. Prov
 `report`
 
 Boolean. Print a short report of changes after completion.
+
+### Example Scripts
+
+```python
+f = CurrentFont()
+f.track(122)
+```
+
+```python
+f = CurrentFont()
+# Subtract 100 units from basic caps, in default layer only. No negative widths.
+f.track(
+    -100, 
+    glyph_set=["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"],
+	all_layers=False,
+	future_negative_width="limit to zero",
+)
+```
 
 
 ## Acknowledgements
