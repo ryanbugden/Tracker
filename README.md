@@ -45,6 +45,10 @@ Let’s say some of your glyphs are 50 units wide, and you want to track your fo
 
 **Don’t Change:** You want to handle the spacing of these glyphs yourself. You want to leave these glyphs unaffected by Tracker.
 
+### Report
+
+Choose whether you would like to output a report of what changes Tracker made to your RoboFont [Output Window](https://robofont.com/documentation/reference/workspace/output-window/).
+
 ## A couple of use-cases
 
 ### Changing the overall spacing of your font

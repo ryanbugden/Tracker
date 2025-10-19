@@ -13,7 +13,9 @@ EXTENSION_DEFAULTS = {
     # Avoid changing zero-width glyphs
     "ignoreZeroWidth": True,
     # If spacing will result in a negative width, limit it to zero, allow negative widths, or avoid respacing that glyph altogether
-    "prospectiveNegativeWidths": 0, # "limit to zero", "allow negatives", or "don’t change"
+    "prospectiveNegativeWidths": 0,  # "limit to zero", "allow negatives", or "don’t change"
+    # Print report to output window
+    "report": True,
 }
 
 
@@ -39,6 +41,9 @@ class TrackerSettingsWindowController(ezui.WindowController):
         > (X) Limit to Zero        @prospectiveNegativeWidths
         > ( ) Allow
         > ( ) Don’t Change
+
+        > : Report:
+        > [X] Output Changes       @report
         
         > ---
         

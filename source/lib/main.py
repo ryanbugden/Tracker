@@ -170,7 +170,7 @@ class Tracker(Subscriber, ezui.WindowController):
             all_layers = settings["layersSelection"], 
             ignore_zero_width = settings["ignoreZeroWidth"], 
             future_negative_width = ["limit to zero", "allow negatives", "don’t change"][settings["prospectiveNegativeWidths"]],
-            report=True
+            report=settings['report']
             )
         self.reset_space_center()
         self.update_slider_from_sc()
