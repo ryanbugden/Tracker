@@ -45,6 +45,15 @@ Let’s say some of your glyphs are 50 units wide, and you want to track your fo
 
 **Don’t Change:** You want to handle the spacing of these glyphs yourself. You want to leave these glyphs unaffected by Tracker.
 
+## A couple of use-cases
+
+### Changing the overall spacing of your font
+![](source/resources/use_case-overall.gif)
+
+### Changing the spacing of your caps
+![](source/resources/use_case-caps.gif)
+
+
 
 ## Behind the scenes
 

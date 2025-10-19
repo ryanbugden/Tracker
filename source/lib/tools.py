@@ -2,6 +2,8 @@ import math
 from fontTools.misc.fixedTools import otRound
 from mojo.roboFont import RFont
 
+
+
 def track_glyph(glyph, side_value, glyph_set=None):
     glyph_set = [glyph.name] if glyph_set is None else glyph_set
     with glyph.holdChanges():
@@ -79,12 +81,13 @@ def track_font(font, value, glyph_set=None, all_layers=True, ignore_zero_width=T
                 print(f"\t{layer}")
                 print(f"\t\t{glyphs}")
 
-
-
-
+# Tee up the main function for addition into RFont object
 def track(self, value, glyph_set=None, all_layers=True, ignore_zero_width=True, future_negative_width="allow negatives", report=False):
     track_font(self, value, glyph_set, all_layers, ignore_zero_width, future_negative_width, report)
 
-# Add to RFont API
+
+
+# Add to RFont object
 RFont.track = track
+
 

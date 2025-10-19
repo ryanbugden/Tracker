@@ -3,7 +3,7 @@
 
 """
 Preview tracking in Space Center, and then click button to apply in the font.
-Components (transformed or otherwise) should be handled gracefully, 
+Components (transformed or otherwise) are handled gracefully, 
 but double-check the wildly transformed ones for 1-off errors.
 	
 Ryan Bugden
@@ -17,14 +17,13 @@ from mojo.subscriber import Subscriber, registerRoboFontSubscriber, getRegistere
 from mojo.extensions import getExtensionDefault, setExtensionDefault
 
 from importlib import reload
-import defaults
 import tools
 import settings
-reload(defaults)
-EXTENSION_KEY = defaults.EXTENSION_KEY
-EXTENSION_DEFAULTS = defaults.EXTENSION_DEFAULTS
 reload(tools)
 reload(settings)
+EXTENSION_KEY = settings.EXTENSION_KEY
+EXTENSION_DEFAULTS = settings.EXTENSION_DEFAULTS
+
 
 
 def my_round(x, base=2):
@@ -43,6 +42,7 @@ def label_formatter(attributes):
     value = attributes["value"]
     color = [(0.65, 0.65, 0.65, 1), (0.35, 0.35, 0.35, 1)][inDarkMode()]
     attributes["fillColor"] = color
+
 
 
 class Tracker(Subscriber, ezui.WindowController):
@@ -160,14 +160,12 @@ class Tracker(Subscriber, ezui.WindowController):
         self.update_percentage_label()
         
     def applyButtonCallback(self, sender):
-        self.tracking = self.w.getItem("trackingTextField").get()
-        tracking_value = otRound(self.tracking) 
         # Set up settings
         f = self.csc.font.asFontParts()
         settings = getExtensionDefault(EXTENSION_KEY, EXTENSION_DEFAULTS)
         # Apply tracking to font
         f.track(
-            tracking_value = tracking_value, 
+            value = otRound(self.w.getItem("trackingTextField").get()), 
             glyph_set = [f.selectedGlyphNames, None][settings["glyphsSelection"]],
             all_layers = settings["layersSelection"], 
             ignore_zero_width = settings["ignoreZeroWidth"], 
@@ -200,8 +198,6 @@ class Tracker(Subscriber, ezui.WindowController):
         # Get settings
         f = self.csc.font.asFontParts()
         settings = getExtensionDefault(EXTENSION_KEY, EXTENSION_DEFAULTS)
-        # print("settings['glyphsSelection']", settings["glyphsSelection"])
-        # print("[f.selectedGlyphNames, None]", [f.selectedGlyphNames, None])
         glyph_set = [f.selectedGlyphNames, None][settings["glyphsSelection"]]
         all_layers = settings["layersSelection"]
         ignore_zero_width = settings["ignoreZeroWidth"]
@@ -229,10 +225,9 @@ class Tracker(Subscriber, ezui.WindowController):
                 grs = self.csc.glyphRecords
                 side_value = otRound(self.tracking/2)
                 for i, gr in enumerate(grs):
-                    if glyph_set is not None and gr.glyph.name not in glyph_set:
+                    if gr.glyph.name not in filtered_glyph_set:
                         continue
                     if future_negative_width == "limit to zero" and gr.glyph.width < -self.tracking:
-                        print(gr.glyph.name, "limit to zero")
                         side_value = -gr.glyph.width/2  # otRound(-g.width/2) 
                     gr.xAdvance += side_value
                     if i > 0: 
