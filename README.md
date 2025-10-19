@@ -46,7 +46,7 @@ Let’s say some of your glyphs are 50 units wide, and you want to track your fo
 **Don’t Change:** You want to handle the spacing of these glyphs yourself. You want to leave these glyphs unaffected by Tracker.
 
 
-## Behind-the-scenes:
+## Behind the scenes
 
 - Tracker works with font units. Typesetting apps don’t always use that measurement. Let’s say you have your font test-installed and working in Figma. You like how 3% tracking looks in Figma, and you want that to be your font’s default spacing. The percentage is of your font’s “em.” Most fonts have 1000 units per em; let’s say yours does too. 
 
@@ -59,7 +59,7 @@ Let’s say some of your glyphs are 50 units wide, and you want to track your fo
 
 	> Note: Tracker will only correct the component positioning if the component’s base glyph is contained in the glyph set in question. That means that if you do a bunch of tracking operations on different subsets of glyphs, you may have undesired results with components.
  
-## API:
+## API
 
 If you have Tracker installed, a generalized `track()` method is added to `RFont` objects.
 
@@ -84,7 +84,7 @@ f.track(122)
 
 ```python
 f = CurrentFont()
-
+# Subtract 100 units from basic caps, in default layer only. No negative widths.
 f.track(
     -100, 
     glyph_set=["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"],
@@ -130,4 +130,4 @@ Boolean. Print a short report of changes after completion.
 
 - Frederik Berlaen, for RoboFont
 - Tal Leming, for EZUI & Susbcriber
-- Connor Davenport for the [snippet](https://github.com/ryanbugden/Tracker/issues/3#issuecomment-3408261462)
+- Connor Davenport, for the [snippet](https://github.com/ryanbugden/Tracker/issues/3#issuecomment-3408261462)
