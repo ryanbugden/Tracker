@@ -224,15 +224,25 @@ class Tracker(Subscriber, ezui.WindowController):
                 self.reset_space_center()
                 grs = self.csc.glyphRecords
                 side_value = otRound(self.tracking/2)
+                changing = set()
                 for i, gr in enumerate(grs):
                     if gr.glyph.name not in filtered_glyph_set:
                         continue
+                    changing.add(gr.glyph.name)
                     if future_negative_width == "limit to zero" and gr.glyph.width < -self.tracking:
                         side_value = -gr.glyph.width/2  # otRound(-g.width/2) 
-                    gr.xAdvance += side_value
+                    # gr.xAdvance += side_value
                     if i > 0: 
                         p = grs[i-1]
-                        p.xAdvance += side_value
+                        if p.glyph.objectName != "EmptyGlyph":
+                            gr.xAdvance += side_value
+                    else:
+                        gr.xAdvance += side_value
+                    if i > 0: 
+                        p = grs[i-1]
+                        if p.glyph.objectName != "EmptyGlyph":
+                            p.xAdvance += side_value
+                print("changing", changing)
                 self.csc.refreshGlyphLineView()
 
     def trackerSettingsDidChange(self, info):
