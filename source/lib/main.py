@@ -203,11 +203,20 @@ class Tracker(Subscriber, ezui.WindowController):
         all_layers = settings["layersSelection"]
         ignore_zero_width = settings["ignoreZeroWidth"]
         future_negative_width = ["limit to zero", "allow negatives", "don’t change"][settings["prospectiveNegativeWidths"]]
+        
+        # Helper functions for preview
+        def is_empty_record(gr):
+            return getattr(gr.glyph, "objectName", None) == "EmptyGlyph" or gr.glyph.name is None
+
+        def preview_side_value(gr):
+            if future_negative_width == "limit to zero" and gr.glyph.width < -self.tracking:
+                return -gr.glyph.width / 2
+            return self.tracking / 2
 
         # Check that we're in a relevant layer. Otherwise, don't change the Space Center preview.
-        if all_layers == True or self.csc.getLayerName() == f.defaultLayer.name:
+        if all_layers or self.csc.getLayerName() == f.defaultLayer.name:
             # If we're tracking the whole font, just do a simple tracking change.
-            if glyph_set is None and ignore_zero_width == False and future_negative_width == "allow negatives":
+            if glyph_set is None and not ignore_zero_width and future_negative_width == "allow negatives":
                 self.csc.setTracking(self.tracking)
             else:
                 # Establish actual glyph set and filter out some glyphs, given settings
@@ -221,21 +230,21 @@ class Tracker(Subscriber, ezui.WindowController):
                         continue
                     filtered_glyph_set.add(g_name)
 
-                # Glyph specific spacing preview
                 self.reset_space_center()
                 grs = self.csc.glyphRecords
-                side_value = self.tracking/2
                 for i, gr in enumerate(grs):
+                    if is_empty_record(gr):
+                        continue
                     if gr.glyph.name not in filtered_glyph_set:
                         continue
-                    if future_negative_width == "limit to zero" and gr.glyph.width < -self.tracking:
-                        side_value = -gr.glyph.width/2  # otRound(-g.width/2) 
-                    gr.xAdvance += side_value
-                    if i > 0: 
-                        p = grs[i-1]
-                        p.xAdvance += side_value
+                    side_value = preview_side_value(gr)
+                    # Left side, only if previous record is a real glyph
+                    if i > 0 and not is_empty_record(grs[i - 1]):
+                        gr.xAdvance += side_value
+                    if i + 1 < len(grs) and not is_empty_record(grs[i + 1]):
+                        gr.xAdvance += side_value
                 self.csc.refreshGlyphLineView()
-
+                
     def trackerSettingsDidChange(self, info):
         self.reset_space_center()
         self.update_info_label()
