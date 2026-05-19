@@ -32,7 +32,7 @@ def my_round(x, base=2):
 def color_number_formatter(attributes):
     value = attributes["value"]
     main_color = [(0, 0, 0, 1), (1, 1, 1, 1)][inDarkMode()]
-    if value != my_round(value):
+    if value != otRound(value):
         color = (1, 0, 0, 1)
     else:
         color = main_color
@@ -148,18 +148,16 @@ class Tracker(Subscriber, ezui.WindowController):
 
     def trackingTextFieldCallback(self, sender):
         value = sender.get()
-        # Only accept valid values
-        if type(value) != int:
+        try:
+            value = int(value)
+        except (TypeError, ValueError):
             self.w.getItem("applyButton").enable(False)
             return
+        self.w.getItem("applyButton").enable(True)
         # Update slider from text field
         self.w.getItem('trackingSlider').set(sender.get())
-        if value == my_round(value):
-            self.w.getItem("applyButton").enable(True)
-            self.tracking = otRound(sender.get() / 2) * 2
-            self.preview_tracking()
-        else:
-            self.w.getItem("applyButton").enable(False)
+        self.tracking = sender.get()
+        self.preview_tracking()
         self.update_percentage_label()
         
     def applyButtonCallback(self, sender):
@@ -226,7 +224,7 @@ class Tracker(Subscriber, ezui.WindowController):
                 # Glyph specific spacing preview
                 self.reset_space_center()
                 grs = self.csc.glyphRecords
-                side_value = otRound(self.tracking/2)
+                side_value = self.tracking/2
                 for i, gr in enumerate(grs):
                     if gr.glyph.name not in filtered_glyph_set:
                         continue

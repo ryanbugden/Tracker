@@ -67,11 +67,15 @@ Choose whether you would like to output a report of what changes Tracker made to
 	
 	So now you know to apply 30 units of tracking to your font using Tracker. Luckily, Tracker provides a readout that tells you what percentage you are tracking your font, based on the units you input.
 
-- Tracker will force you to track with an even number. This is because it encourages you to add an equal amount of space to each sidebearing of each glyph. Let’s say you would like to add 1 unit of tracking. Which sidebearing will you add the unit to? Now you see the problem.
+- Tracker will encourage you to track with an even number. This is because it encourages you to add an equal amount of space to each sidebearing of each glyph. Let’s say you would like to add 1 unit of tracking. Which sidebearing will you add the unit to? This can be a problem if you draw while snapping to the grid (how the font binary will ultimately be generated). 
+
+  - That said, you may manually type an odd value into the text field. Tracker will add an equal amount of space (in half units) to each side of each glyph. Rounding is up to you, either manually or `CurrentFont().round()`.
+  - Tracker does not allow you to input a floating point number.
+
 - Components are tricky because they’re just references to glyphs inside other glyphs and each glyph has their own spacing situation... Well, Tracker has some *state-of-the-art* math inside that preserves your relative component positioning as best as possible, regardless of whether components are stretch, squished, rotated, flipped, etc. 
 
-	> Note: Tracker will only correct the component positioning if the component’s base glyph is contained in the glyph set in question. That means that if you do a bunch of tracking operations on different subsets of glyphs, you may have undesired results with components.
- 
+  > Note: Tracker will only correct the component positioning if the component’s base glyph is contained in the glyph set in question. That means that if you do a bunch of tracking operations on different subsets of glyphs, you may have undesired results with components.
+
 ## API
 
 If you have Tracker installed, a generalized `track()` method is added to `RFont` objects.

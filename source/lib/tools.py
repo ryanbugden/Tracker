@@ -42,7 +42,7 @@ def track_glyph(glyph, side_value, glyph_set=None):
         glyph.width += side_value * 2
         
 def track_font(font, value, glyph_set=None, all_layers=True, ignore_zero_width=True, future_negative_width="allow negatives", report=False):
-    half = otRound(value/2)
+    half = value/2
     layers = font.layers if all_layers else [font.defaultLayer]
     ignored_glyphs = {}
     clamped_glyphs = {}
@@ -75,7 +75,7 @@ def track_font(font, value, glyph_set=None, all_layers=True, ignore_zero_width=T
                     continue
                 glyph_half = half
                 if -glyph_half * 2 > g.width and future_negative_width == "limit to zero":
-                    glyph_half = otRound(-g.width/2)
+                    glyph_half = -g.width/2
                     clamped_glyphs.setdefault(layer.name, []).append(g.name)
                 track_glyph(g, glyph_half, effective_glyph_set)
                 changed_glyphs.setdefault(layer.name, []).append(g.name)
@@ -92,20 +92,22 @@ def track_font(font, value, glyph_set=None, all_layers=True, ignore_zero_width=T
         if half < 0:
             emoji = "➡️⬅️"
         print(f"{emoji} Applied tracking of {half*2}.")
+        if half != otRound(half):
+            print("⚠️ Note: It was not an even number, so you might end up with floating-point sidebearings.")
         if changed_glyphs:
-            print("\n↔️ Changed glyphs:")
+            print("\n🔺 Changed glyphs:")
             for layer, glyphs in changed_glyphs.items():
-                print(f"\t{layer}")
+                print(f"\t📑 {layer}")
                 print(f"\t\t{glyphs}")
         if clamped_glyphs:
             print("\n🫸 Glyphs limited to zero:")
             for layer, glyphs in clamped_glyphs.items():
-                print(f"\t{layer}")
+                print(f"\t📑 {layer}")
                 print(f"\t\t{glyphs}")
         if ignored_glyphs:
             print("\n👋 Deliberately ignored glyphs:")
             for layer, glyphs in ignored_glyphs.items():
-                print(f"\t{layer}")
+                print(f"\t📑 {layer}")
                 print(f"\t\t{glyphs}")
 
 # Tee up the main function for addition into RFont object
