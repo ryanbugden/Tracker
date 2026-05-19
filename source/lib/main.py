@@ -241,6 +241,7 @@ class Tracker(Subscriber, ezui.WindowController):
                     # Left side, only if previous record is a real glyph
                     if i > 0 and not is_empty_record(grs[i - 1]):
                         gr.xAdvance += side_value
+                    # Right side, only if next record is a real glyph
                     if i + 1 < len(grs) and not is_empty_record(grs[i + 1]):
                         gr.xAdvance += side_value
                 self.csc.refreshGlyphLineView()

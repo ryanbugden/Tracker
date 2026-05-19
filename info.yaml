@@ -3,7 +3,7 @@ developer: Ryan Bugden
 developerURL: http://ryanbugden.com
 launchAtStartUp: true
 mainScript: tools.py
-version: 0.3
+version: 0.3.1
 addToMenu:
 - path: main.py
   preferredName: Tracker
