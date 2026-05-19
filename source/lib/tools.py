@@ -3,6 +3,13 @@ from fontTools.misc.fixedTools import otRound
 from mojo.roboFont import RFont
 
 
+def get_sync_metrics_state(font):
+    lib_key = "com.typemytype.robofont.syncGlyphLayers"
+    if lib_key in font.lib:
+        settings = font.lib[lib_key]
+        if "metrics" in settings:
+            return settings
+    return None
 
 def track_glyph(glyph, side_value, glyph_set=None):
     glyph_set = [glyph.name] if glyph_set is None else glyph_set
@@ -40,6 +47,14 @@ def track_font(font, value, glyph_set=None, all_layers=True, ignore_zero_width=T
     ignored_glyphs = {}
     clamped_glyphs = {}
     changed_glyphs = {}
+    # Save sync metrics state and restore afterward
+    sync_metrics = get_sync_metrics_state(font)
+    if sync_metrics:
+        temp_state = sync_metrics.split()
+        temp_state.remove("metrics")
+        temp_state = " ".join(temp_state)
+        font.lib["com.typemytype.robofont.syncGlyphLayers"] = temp_state
+        print(f"Tracker: Temporarily suspending sync metrics state: {sync_metrics} --> {temp_state} ")
     with font.holdChanges():
         for layer in layers:
             layer_glyph_names = layer.keys() if glyph_set is None else glyph_set
@@ -65,28 +80,33 @@ def track_font(font, value, glyph_set=None, all_layers=True, ignore_zero_width=T
                 track_glyph(g, glyph_half, effective_glyph_set)
                 changed_glyphs.setdefault(layer.name, []).append(g.name)
                 
-        if report:
-            print("Tracker Report:")
-            print("\n*********************\nTracker Report:\n*********************")
-            emoji = "⬅️➡️"
-            if half < 0:
-                emoji = "➡️⬅️"
-            print(f"{emoji} Applied tracking of {half*2}.")
-            if changed_glyphs:
-                print("Changed glyphs:")
-                for layer, glyphs in changed_glyphs.items():
-                    print(f"\t{layer}")
-                    print(f"\t\t{glyphs}")
-            if clamped_glyphs:
-                print("Glyphs limited to zero:")
-                for layer, glyphs in clamped_glyphs.items():
-                    print(f"\t{layer}")
-                    print(f"\t\t{glyphs}")
-            if ignored_glyphs:
-                print("Deliberately ignored glyphs:")
-                for layer, glyphs in ignored_glyphs.items():
-                    print(f"\t{layer}")
-                    print(f"\t\t{glyphs}")
+    # Restore sync metrics
+    if sync_metrics: 
+        print(f"Tracker: Restoring sync metrics state: {temp_state} --> {sync_metrics}")
+        font.lib["com.typemytype.robofont.syncGlyphLayers"] = sync_metrics
+
+    if report:
+        print("Tracker Report:")
+        print("\n*********************\nTracker Report:\n*********************")
+        emoji = "⬅️➡️"
+        if half < 0:
+            emoji = "➡️⬅️"
+        print(f"{emoji} Applied tracking of {half*2}.")
+        if changed_glyphs:
+            print("\n↔️ Changed glyphs:")
+            for layer, glyphs in changed_glyphs.items():
+                print(f"\t{layer}")
+                print(f"\t\t{glyphs}")
+        if clamped_glyphs:
+            print("\n🫸 Glyphs limited to zero:")
+            for layer, glyphs in clamped_glyphs.items():
+                print(f"\t{layer}")
+                print(f"\t\t{glyphs}")
+        if ignored_glyphs:
+            print("\n👋 Deliberately ignored glyphs:")
+            for layer, glyphs in ignored_glyphs.items():
+                print(f"\t{layer}")
+                print(f"\t\t{glyphs}")
 
 # Tee up the main function for addition into RFont object
 def track(self, value, glyph_set=None, all_layers=True, ignore_zero_width=True, future_negative_width="allow negatives", report=False):
