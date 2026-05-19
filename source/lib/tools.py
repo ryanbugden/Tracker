@@ -49,37 +49,39 @@ def track_font(font, value, glyph_set=None, all_layers=True, ignore_zero_width=T
                 if g.width == 0 and ignore_zero_width:
                     ignored_glyphs.setdefault(layer.name, []).append(g.name)
                     continue
-                if -half * 2 > g.width and future_negative_width != "allow negatives":
+                glyph_half = half
+                if -glyph_half * 2 > g.width and future_negative_width != "allow negatives":
                     if future_negative_width == "limit to zero":
-                        half = otRound(-g.width/2)
+                        glyph_half = otRound(-g.width/2)
                         clamped_glyphs.setdefault(layer.name, []).append(g.name)
                     elif future_negative_width == "don’t change":
                         ignored_glyphs.setdefault(layer.name, []).append(g.name)
                         continue
-                track_glyph(g, half, glyph_set)
+                track_glyph(g, glyph_half, glyph_set)
                 changed_glyphs.setdefault(layer.name, []).append(g.name)
-
-        print("Tracker Report:")
-        print("\n*********************\nTracker Report:\n*********************")
-        emoji = "⬅️➡️"
-        if half < 0:
-            emoji = "➡️⬅️"
-        print(f"{emoji} Applied tracking of {half*2}.")
-        if changed_glyphs:
-            print("Changed glyphs:")
-            for layer, glyphs in changed_glyphs.items():
-                print(f"\t{layer}")
-                print(f"\t\t{glyphs}")
-        if clamped_glyphs:
-            print("Glyphs limited to zero:")
-            for layer, glyphs in clamped_glyphs.items():
-                print(f"\t{layer}")
-                print(f"\t\t{glyphs}")
-        if ignored_glyphs:
-            print("Deliberately ignored glyphs:")
-            for layer, glyphs in ignored_glyphs.items():
-                print(f"\t{layer}")
-                print(f"\t\t{glyphs}")
+                
+        if report:
+            print("Tracker Report:")
+            print("\n*********************\nTracker Report:\n*********************")
+            emoji = "⬅️➡️"
+            if half < 0:
+                emoji = "➡️⬅️"
+            print(f"{emoji} Applied tracking of {half*2}.")
+            if changed_glyphs:
+                print("Changed glyphs:")
+                for layer, glyphs in changed_glyphs.items():
+                    print(f"\t{layer}")
+                    print(f"\t\t{glyphs}")
+            if clamped_glyphs:
+                print("Glyphs limited to zero:")
+                for layer, glyphs in clamped_glyphs.items():
+                    print(f"\t{layer}")
+                    print(f"\t\t{glyphs}")
+            if ignored_glyphs:
+                print("Deliberately ignored glyphs:")
+                for layer, glyphs in ignored_glyphs.items():
+                    print(f"\t{layer}")
+                    print(f"\t\t{glyphs}")
 
 # Tee up the main function for addition into RFont object
 def track(self, value, glyph_set=None, all_layers=True, ignore_zero_width=True, future_negative_width="allow negatives", report=False):

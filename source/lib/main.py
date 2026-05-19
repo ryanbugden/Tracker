@@ -148,9 +148,13 @@ class Tracker(Subscriber, ezui.WindowController):
         self.preview_tracking()
 
     def trackingTextFieldCallback(self, sender):
+        value = sender.get()
+        # Only accept valid values
+        if type(value) != int:
+            self.w.getItem("applyButton").enable(False)
+            return
         # Update slider from text field
         self.w.getItem('trackingSlider').set(sender.get())
-        value = sender.get()
         if value == my_round(value):
             self.w.getItem("applyButton").enable(True)
             self.tracking = otRound(sender.get() / 2) * 2
