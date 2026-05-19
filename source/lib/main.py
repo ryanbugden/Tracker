@@ -119,7 +119,6 @@ class Tracker(Subscriber, ezui.WindowController):
         
     def destroy(self):
         self.reset_space_center()
-        self.w.close()
 
     def reset_space_center(self):
         self.csc.setTracking(0)
