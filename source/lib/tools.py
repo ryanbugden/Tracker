@@ -42,44 +42,51 @@ def track_font(font, value, glyph_set=None, all_layers=True, ignore_zero_width=T
     changed_glyphs = {}
     with font.holdChanges():
         for layer in layers:
-            glyph_set = layer.keys() if glyph_set is None else glyph_set
-            for g in layer:
-                if g.name not in glyph_set:
+            layer_glyph_names = layer.keys() if glyph_set is None else glyph_set
+            effective_glyph_set = set()
+            for g_name in layer_glyph_names:
+                if g_name not in layer:
                     continue
+                g = layer[g_name]
                 if g.width == 0 and ignore_zero_width:
-                    ignored_glyphs.setdefault(layer.name, []).append(g.name)
+                    ignored_glyphs.setdefault(layer.name, []).append(g_name)
                     continue
-                if -half * 2 > g.width and future_negative_width != "allow negatives":
-                    if future_negative_width == "limit to zero":
-                        half = otRound(-g.width/2)
-                        clamped_glyphs.setdefault(layer.name, []).append(g.name)
-                    elif future_negative_width == "don’t change":
-                        ignored_glyphs.setdefault(layer.name, []).append(g.name)
-                        continue
-                track_glyph(g, half, glyph_set)
+                if -half * 2 > g.width and future_negative_width == "don’t change":
+                    ignored_glyphs.setdefault(layer.name, []).append(g_name)
+                    continue
+                effective_glyph_set.add(g_name)
+            for g in layer:
+                if g.name not in effective_glyph_set:
+                    continue
+                glyph_half = half
+                if -glyph_half * 2 > g.width and future_negative_width == "limit to zero":
+                    glyph_half = otRound(-g.width/2)
+                    clamped_glyphs.setdefault(layer.name, []).append(g.name)
+                track_glyph(g, glyph_half, effective_glyph_set)
                 changed_glyphs.setdefault(layer.name, []).append(g.name)
-
-        print("Tracker Report:")
-        print("\n*********************\nTracker Report:\n*********************")
-        emoji = "⬅️➡️"
-        if half < 0:
-            emoji = "➡️⬅️"
-        print(f"{emoji} Applied tracking of {half*2}.")
-        if changed_glyphs:
-            print("Changed glyphs:")
-            for layer, glyphs in changed_glyphs.items():
-                print(f"\t{layer}")
-                print(f"\t\t{glyphs}")
-        if clamped_glyphs:
-            print("Glyphs limited to zero:")
-            for layer, glyphs in clamped_glyphs.items():
-                print(f"\t{layer}")
-                print(f"\t\t{glyphs}")
-        if ignored_glyphs:
-            print("Deliberately ignored glyphs:")
-            for layer, glyphs in ignored_glyphs.items():
-                print(f"\t{layer}")
-                print(f"\t\t{glyphs}")
+                
+        if report:
+            print("Tracker Report:")
+            print("\n*********************\nTracker Report:\n*********************")
+            emoji = "⬅️➡️"
+            if half < 0:
+                emoji = "➡️⬅️"
+            print(f"{emoji} Applied tracking of {half*2}.")
+            if changed_glyphs:
+                print("Changed glyphs:")
+                for layer, glyphs in changed_glyphs.items():
+                    print(f"\t{layer}")
+                    print(f"\t\t{glyphs}")
+            if clamped_glyphs:
+                print("Glyphs limited to zero:")
+                for layer, glyphs in clamped_glyphs.items():
+                    print(f"\t{layer}")
+                    print(f"\t\t{glyphs}")
+            if ignored_glyphs:
+                print("Deliberately ignored glyphs:")
+                for layer, glyphs in ignored_glyphs.items():
+                    print(f"\t{layer}")
+                    print(f"\t\t{glyphs}")
 
 # Tee up the main function for addition into RFont object
 def track(self, value, glyph_set=None, all_layers=True, ignore_zero_width=True, future_negative_width="allow negatives", report=False):
