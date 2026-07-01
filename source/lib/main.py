@@ -15,6 +15,7 @@ import ezui
 from mojo.UI import CurrentSpaceCenter, OpenSpaceCenter, inDarkMode
 from mojo.subscriber import Subscriber, registerRoboFontSubscriber, getRegisteredSubscriberEvents, registerSubscriberEvent
 from mojo.extensions import getExtensionDefault, setExtensionDefault
+from mojo.roboFont import version as VERSION
 
 from importlib import reload
 import tools
@@ -121,7 +122,12 @@ class Tracker(Subscriber, ezui.WindowController):
         self.reset_space_center()
 
     def reset_space_center(self):
-        self.csc.setTracking(0)
+        if VERSION == "4.6":
+            # Workaround for RF 4.6 bug
+            reset_value = 0.000000000000000001
+        else:
+            reset_value = 0
+        self.csc.setTracking(reset_value)
         self.csc.refreshGlyphLineView()
         
     def spaceCenterDidKeyUp(self, info):
