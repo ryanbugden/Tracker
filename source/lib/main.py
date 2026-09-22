@@ -260,7 +260,7 @@ class Tracker(Subscriber, ezui.WindowController):
 
 
 if CurrentFont():
-    registerRoboFontSubscriber(Tracker)
+    OpenWindow(Tracker)
     # Register a subscriber event for when Tracker settings change
     event_name = f"{EXTENSION_KEY}.trackerSettingsDidChange"
     if event_name not in getRegisteredSubscriberEvents():
